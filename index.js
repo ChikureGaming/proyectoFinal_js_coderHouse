@@ -19,20 +19,75 @@ localStorage.setItem("disponibilidad", JSON.stringify(inventario));
 
    const inventarioStorage = (identificador, nombre, valor, cantidad) => {localStorage.setItem(identificador,nombre, valor, cantidad)};
 
-   for (const producto of inventario)
-   { let listado = document.createElement("div");
+   for (const producto of inventario){
+    let listado = document.createElement("div");
     listado.innerHTML = `<h5> ID: ${producto.id}</h5>
                                <p> Producto: ${producto.marca}</p>
                                <b> $ ${producto.precio}</b>
                                <p> Cantidad =  ${producto.cantidad}</p>
                                <button id="boton${producto.marca}">Agregar</button>`;
-                               document.body.appendChild(listado);
-                            };
+document.body.appendChild(listado);
+let agregar = document.getElementById(`boton${producto.marca}`);
 
-let agregar = document.getElementById(`boton${producto.cantidad}`);
-agregar.addEventListener("click", () => agregarProducto(producto.cantidad));
+agregar.addEventListener("click", () => console.log(producto));
+};
 
-let boton = document.getElementById("boton").onclick;
-boton.addEventListener("click", () => {
-    listado.innerHTML.cantidad =  "1";
+let boton1 = document.getElementById("botonPokemon TCG");
+
+boton1.addEventListener("click", () => {
+    Swal.fire({
+        icon: 'success',
+        title: 'Agregar',
+        text: 'Paquete de Pokemon agregado',
+      });
+});
+
+let boton2 = document.getElementById("botonYugioh TCG");
+
+boton2.addEventListener("click", () => {
+    Swal.fire({
+        icon: 'success',
+        title: 'Agregar',
+        text: 'Paquete de Yugioh agregado',
+      });
+});
+
+let boton3 = document.getElementById("botonDigimon TCG");
+
+boton3.addEventListener("click", () => {
+    Swal.fire({
+        icon: 'success',
+        title: 'Agregar',
+        text: 'Paquete de Digimon agregado',
+      });
+});
+
+let boton4 = document.getElementById("botonFinal Fantasy TCG");
+
+boton4.addEventListener("click", () => {
+    Swal.fire({
+        icon: 'success',
+        title: 'Agregar',
+        text: 'Paquete de Final Fantasy agregado',
+      });
+});
+
+let boton5 = document.getElementById("botonWeiss TCG");
+
+boton5.addEventListener("click", () => {
+    Swal.fire({
+        icon: 'success',
+        title: 'Agregar',
+        text: 'Paquete de Weiss agregado',
+      });
+});
+
+let boton6 = document.getElementById("botonOne Piece TCG");
+
+boton6.addEventListener("click", () => {
+    Swal.fire({
+        icon: 'success',
+        title: 'Agregar',
+        text: 'Paquete de One Piece agregado',
+      });
 });
