@@ -19,18 +19,29 @@ localStorage.setItem("disponibilidad", JSON.stringify(inventario));
 
    const inventarioStorage = (identificador, nombre, valor, cantidad) => {localStorage.setItem(identificador,nombre, valor, cantidad)};
 
-   for (const producto of inventario){
-    let listado = document.createElement("div");
-    listado.innerHTML = `<h5> ID: ${producto.id}</h5>
-                               <p> Producto: ${producto.marca}</p>
-                               <b> $ ${producto.precio}</b>
-                               <p> Cantidad =  ${producto.cantidad}</p>
-                               <button id="boton${producto.marca}">Agregar</button>`;
-document.body.appendChild(listado);
-let agregar = document.getElementById(`boton${producto.marca}`);
+let productos = document.getElementById("productos");
+
+fetch("./producto.json")
+.then(response => response.json())
+.then((producto) => {
+    producto.forEach((item) => {
+        let div = document.createElement("div");
+        productos.innerHTML = `<h5> ID: ${producto.id}</h5>
+                                   <p> Producto: ${producto.marca}</p>
+                                   <b> $ ${producto.precio}</b>
+                                   <p> Cantidad =  ${producto.cantidad}</p>
+                                   <button id="boton${producto.marca}">Agregar</button>`;
+    document.main.appendChild(productos);
+    let agregar = document.getElementById(`boton${producto.marca}`);
 
 agregar.addEventListener("click", () => console.log(producto));
-};
+});
+
+
+
+
+
+
 
 let boton1 = document.getElementById("botonPokemon TCG");
 
