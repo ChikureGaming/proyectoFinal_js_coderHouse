@@ -1,47 +1,38 @@
+
+
 class Producto{
-    constructor(id, marca, precio, cantidad){
+    constructor(id, marca, precio){
        this.id = id;
        this.marca = marca;
        this.precio = precio;
-       this.cantidad = cantidad;
     }
    }
    
    const inventario = [
-       new Producto(1, "Pokemon TCG", 8, 0),
-       new Producto(2, "Yugioh TCG", 6, 0),
-       new Producto(3, "Digimon TCG", 5, 0),
-       new Producto(4, "Final Fantasy TCG", 10, 0),
-       new Producto(5, "Weiss TCG", 9, 0),
-       new Producto(6, "One Piece TCG", 15, 0),
+       new Producto(1, "Pokemon TCG", 8),
+       new Producto(2, "Yugioh TCG", 6),
+       new Producto(3, "Digimon TCG", 5),
+       new Producto(4, "Final Fantasy TCG", 10),
+       new Producto(5, "Weiss TCG", 9),
+       new Producto(6, "One Piece TCG", 15),
    ];
 localStorage.setItem("disponibilidad", JSON.stringify(inventario));
 
-   const inventarioStorage = (identificador, nombre, valor, cantidad) => {localStorage.setItem(identificador,nombre, valor, cantidad)};
+   const inventarioStorage = (identificador, nombre, valor) => {localStorage.setItem(identificador,nombre, valor)};
 
 let productos = document.getElementById("productos");
 
 fetch("./producto.json")
-.then(response => response.json())
+.then((response) => response.json())
 .then((producto) => {
-    producto.forEach((item) => {
-        let div = document.createElement("div");
-        productos.innerHTML = `<h5> ID: ${producto.id}</h5>
-                                   <p> Producto: ${producto.marca}</p>
+    console.log(producto);
+    producto.forEach((producto) => {
+
+        productos.innerHTML += `<h5> ID: ${producto.id}</h5>
+                                   <p> Producto: ${producto.nombre}</p>
                                    <b> $ ${producto.precio}</b>
-                                   <p> Cantidad =  ${producto.cantidad}</p>
                                    <button id="boton${producto.marca}">Agregar</button>`;
-    document.main.appendChild(productos);
-    let agregar = document.getElementById(`boton${producto.marca}`);
-
-agregar.addEventListener("click", () => console.log(producto));
 });
-
-
-
-
-
-
 
 let boton1 = document.getElementById("botonPokemon TCG");
 
@@ -101,4 +92,5 @@ boton6.addEventListener("click", () => {
         title: 'Agregar',
         text: 'Paquete de One Piece agregado',
       });
+    });
 });
