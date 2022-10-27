@@ -1,96 +1,119 @@
-
-
-class Producto{
-    constructor(id, marca, precio){
-       this.id = id;
-       this.marca = marca;
-       this.precio = precio;
-    }
-   }
-   
-   const inventario = [
-       new Producto(1, "Pokemon TCG", 8),
-       new Producto(2, "Yugioh TCG", 6),
-       new Producto(3, "Digimon TCG", 5),
-       new Producto(4, "Final Fantasy TCG", 10),
-       new Producto(5, "Weiss TCG", 9),
-       new Producto(6, "One Piece TCG", 15),
-   ];
-localStorage.setItem("disponibilidad", JSON.stringify(inventario));
-
-   const inventarioStorage = (identificador, nombre, valor) => {localStorage.setItem(identificador,nombre, valor)};
-
-let productos = document.getElementById("productos");
+let carrito = [];
+const divisa = "$";
+const DOMitems = document.querySelector("#items");
+const DOMcarrito = document.querySelector("#carrito");
+const DOMtotal = document.querySelector("#total");
+const DOMbotonVaciar = document.querySelector("#boton-vaciar");
 
 fetch("./producto.json")
-.then((response) => response.json())
-.then((producto) => {
+  .then((response) => response.json())
+  .then((producto) => {
     console.log(producto);
+    const inventario = producto; 
     producto.forEach((producto) => {
+      const miNodo = document.createElement("div");
+      miNodo.classList.add("card", "col-sm-4");
 
-        productos.innerHTML += `<h5> ID: ${producto.id}</h5>
-                                   <p> Producto: ${producto.nombre}</p>
-                                   <b> $ ${producto.precio}</b>
-                                   <button id="boton${producto.marca}">Agregar</button>`;
-});
+      const miNodoCardBody = document.createElement("div");
+      miNodoCardBody.classList.add("card-body");
 
-let boton1 = document.getElementById("botonPokemon TCG");
+      const miNodoTitle = document.createElement("h5");
+      miNodoTitle.classList.add("card-title");
+      miNodoTitle.textContent = producto.nombre;
 
-boton1.addEventListener("click", () => {
-    Swal.fire({
-        icon: 'success',
-        title: 'Agregar',
-        text: 'Paquete de Pokemon agregado',
+      const miNodoPrecio = document.createElement("p");
+      miNodoPrecio.classList.add("card-text");
+      miNodoPrecio.textContent = `${producto.precio}${divisa}`;
+
+      const miNodoImagen = document.createElement('img');
+      miNodoImagen.classList.add('img-fluid');
+      miNodoImagen.setAttribute('src', producto.imagen);
+
+      const miNodoBoton = document.createElement("button");
+      miNodoBoton.classList.add("btn", "btn-primary");
+      miNodoBoton.textContent = "+";
+      miNodoBoton.setAttribute("marcador", producto.id);
+      miNodoBoton.addEventListener("click", anyadirProductoAlCarrito);
+
+      miNodoCardBody.appendChild(miNodoTitle);
+      miNodoCardBody.appendChild(miNodoPrecio);
+      miNodoCardBody.appendChild(miNodoBoton);
+      miNodoCardBody.appendChild(miNodoImagen);
+      miNodo.appendChild(miNodoCardBody);
+      DOMitems.appendChild(miNodo);
+    });
+
+    function anyadirProductoAlCarrito(evento) {
+      carrito.push(evento.target.getAttribute("marcador"));
+      renderizarCarrito();
+    }
+
+    function renderizarCarrito() {
+      DOMcarrito.textContent = "";
+      console.log(carrito);
+      const carritoSinDuplicados = [...new Set(carrito)];
+      console.log(carritoSinDuplicados);
+      carritoSinDuplicados.forEach(function (item, indice) {
+        let miItem = inventario.filter(function (
+          itemListaDeProductos
+        ) {
+          return itemListaDeProductos["id"] == item;
+        });
+        let numeroUnidadesItem = carrito.reduce(function (total, itemId) {
+          return itemId === item ? (total += 1) : total;
+        }, 0);
+        const miNodo = document.createElement("li");
+        miNodo.classList.add("list-group-item", "text-left", "mx-2");
+        miNodo.textContent = `${numeroUnidadesItem} x ${miItem[0].nombre} - ${miItem[0].precio}${divisa}`;
+
+        const miBoton = document.createElement("button");
+        miBoton.classList.add("btn", "btn-danger", "mx-5");
+        miBoton.textContent = "X";
+        miBoton.style.marginLeft = "1rem";
+        miBoton.dataset.item = item;
+        miBoton.addEventListener("click", borrarItemCarrito);
+
+        miNodo.appendChild(miBoton);
+        DOMcarrito.appendChild(miNodo);
       });
-});
+      DOMtotal.textContent = calcularTotal();
+    }
 
-let boton2 = document.getElementById("botonYugioh TCG");
-
-boton2.addEventListener("click", () => {
-    Swal.fire({
-        icon: 'success',
-        title: 'Agregar',
-        text: 'Paquete de Yugioh agregado',
+    function borrarItemCarrito(evento) {
+      const id = evento.target.dataset.item;
+      carrito = carrito.filter((carritoId) => {
+        return carritoId !== id;
       });
-});
+      renderizarCarrito();
+    }
 
-let boton3 = document.getElementById("botonDigimon TCG");
+    function calcularTotal() {
+      return carrito
+        .reduce((total, item) => {
+          const miItem = producto.filter((producto) => {
+            return producto.id === parseInt(item);
+          });
+          return total + miItem[0].precio;
+        }, 0)
+        .toFixed(2);
+    }
 
-boton3.addEventListener("click", () => {
-    Swal.fire({
-        icon: 'success',
-        title: 'Agregar',
-        text: 'Paquete de Digimon agregado',
-      });
-});
+    function vaciarCarrito() {
+      carrito = [];
+      renderizarCarrito();
+    }
 
-let boton4 = document.getElementById("botonFinal Fantasy TCG");
+    DOMbotonVaciar.addEventListener("click", vaciarCarrito);
 
-boton4.addEventListener("click", () => {
-    Swal.fire({
-        icon: 'success',
-        title: 'Agregar',
-        text: 'Paquete de Final Fantasy agregado',
-      });
-});
+    renderizarCarrito();
 
-let boton5 = document.getElementById("botonWeiss TCG");
+    let botonEfecto = document.getElementById("boton-vaciar");
 
-boton5.addEventListener("click", () => {
-    Swal.fire({
-        icon: 'success',
-        title: 'Agregar',
-        text: 'Paquete de Weiss agregado',
-      });
-});
-
-let boton6 = document.getElementById("botonOne Piece TCG");
-
-boton6.addEventListener("click", () => {
-    Swal.fire({
-        icon: 'success',
-        title: 'Agregar',
-        text: 'Paquete de One Piece agregado',
+    botonEfecto.addEventListener("click", () => {
+      Swal.fire({
+        icon: "warning",
+        title: "Carrito Vacio",
+        text: "Carrito Vaciado Exitosamente",
       });
     });
-});
+  });
